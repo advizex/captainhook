@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net"
+	"os"
 	"os/exec"
 	"syscall"
 )
@@ -89,13 +90,14 @@ func execScript(s script) (result, error) {
 	var stdout bytes.Buffer
 	var stderr bytes.Buffer
 	cmd.Stdout = &stdout
-	cmd.Stderr = &stderr
+	cmd.Stderr = &stdout
 	err := cmd.Run()
 	r := result{
 		stdout.String(),
 		stderr.String(),
 		-1,
 	}
+	os.Stdout.WriteString(r.Stdout)
 	if err == nil {
 		r.StatusCode = cmd.ProcessState.Sys().(syscall.WaitStatus).ExitStatus()
 	}
