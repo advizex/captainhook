@@ -7,8 +7,8 @@ import (
 	"log"
 	"net"
 	"net/http"
+	"os"
 	"strings"
-
 	"github.com/gorilla/mux"
 )
 
@@ -60,6 +60,8 @@ func interoplatePOSTData(rb *runBook, r *http.Request) {
 	}
 	defer r.Body.Close()
 	stringData := string(data[:r.ContentLength])
+	os.Stdout.WriteString(stringData)
+	os.Stdout.WriteString("\n")
 	for i := range rb.Scripts {
 		for j := range rb.Scripts[i].Args {
 			rb.Scripts[i].Args[j] = strings.Replace(rb.Scripts[i].Args[j], "{{POST}}", stringData, -1)
